@@ -34,6 +34,12 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
         "safety": {"total": 0, "passed": 0}
     }
     
+    log_file_path = os.path.join("evaluation", "evaluation.log")
+    os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+
+    with open(log_file_path, "a") as log_file:
+        log_file.write(f"--- Starting new evaluation run for agent: {model_name} at {time.ctime()} ---\n")
+
     for case in test_cases:
         cat = case.get("category", "normal").lower()
         if cat not in category_counts:
@@ -74,6 +80,15 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
             "eval_metrics": eval_result
         }
         results.append(result_record)
+
+        # Log Observability details
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"Test Case ID: {case['id']}\n")
+            log_file.write(f"Input: {case['input']}\n")
+            log_file.write(f"Output: {response_text}\n")
+            log_file.write(f"Evaluation Scores: {json.dumps(eval_result)}\n")
+            log_file.write(f"Passed: {passed}\n")
+            log_file.write("-" * 40 + "\n")
 
     # Compute scores
     def calc_pct(passed, total):
