@@ -94,6 +94,22 @@ python main.py --agent gemini
 python main.py --agent mock
 ```
 
+### Step 7: Open the Dashboard (important)
+
+After a run completes, the terminal prints timing stats and updates `dashboard/index.html` with fresh results.
+
+Use a local HTTP server (recommended) instead of double-clicking the HTML file:
+
+```cmd
+python -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000/dashboard/index.html
+```
+
 ---
 
 ## Running in VS Code — Windows / Mac / Linux
@@ -165,6 +181,22 @@ python main.py --agent gemini
 **To test without any API key:**
 ```bash
 python main.py --agent mock
+```
+
+### Step 8: Open the Dashboard (important)
+
+After a run completes, the terminal prints timing stats and updates `dashboard/index.html` with fresh results.
+
+Start a local HTTP server:
+
+```bash
+python -m http.server 8000
+```
+
+Open:
+
+```text
+http://localhost:8000/dashboard/index.html
 ```
 
 ---
