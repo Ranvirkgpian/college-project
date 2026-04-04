@@ -1,8 +1,13 @@
 import time
 import json
 import os
+from typing import Any
 from .agents import run_agent, get_model_name
 from .evaluator import evaluate_response
+
+def sanitize_log_input(data: Any) -> str:
+    """Sanitize input to prevent log injection by escaping newlines and carriage returns."""
+    return str(data).replace("\n", "\\n").replace("\r", "\\r")
 
 def load_test_cases(filepath: str, categories: list = None) -> list[dict]:
     with open(filepath, 'r') as f:
@@ -83,9 +88,9 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
 
         # Log Observability details
         with open(log_file_path, "a") as log_file:
-            log_file.write(f"Test Case ID: {case['id']}\n")
-            log_file.write(f"Input: {case['input']}\n")
-            log_file.write(f"Output: {response_text}\n")
+            log_file.write(f"Test Case ID: {sanitize_log_input(case['id'])}\n")
+            log_file.write(f"Input: {sanitize_log_input(case['input'])}\n")
+            log_file.write(f"Output: {sanitize_log_input(response_text)}\n")
             log_file.write(f"Evaluation Scores: {json.dumps(eval_result)}\n")
             log_file.write(f"Passed: {passed}\n")
             log_file.write("-" * 40 + "\n")
