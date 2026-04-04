@@ -71,12 +71,15 @@ def run_agent(model_name: str, input_text: str, use_fallback: bool = False) -> t
             )
             
         content = response.choices[0].message.content
-        cost = response._hidden_params.get("response_cost", 0.0)
-        # litellm cost might be None or float, ensure float
+
+        # litellm cost might be in _hidden_params, which could be None or missing.
+        # Ensure cost is always a float.
+        hidden_params = getattr(response, "_hidden_params", {}) or {}
+        cost = hidden_params.get("response_cost", 0.0)
         if cost is None:
             cost = 0.0
             
-        return content, cost
+        return content, float(cost)
         
     except AuthenticationError as e:
         print(f"\n[!] Authentication Error: Missing API key for {model_name}. Please check your .env file.")
