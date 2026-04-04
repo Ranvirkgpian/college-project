@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
@@ -18,28 +19,40 @@ def save_json_report(report_data: dict) -> str:
         
     return filename
 
-import re
-
 def inject_dashboard(report_data: dict, template_path: str = "dashboard/index.html"):
     """Injects the JSON report data into the HTML dashboard."""
     if not os.path.exists(template_path):
         print(f"[!] Dashboard template not found at {template_path}")
-        return
+        return False
         
     with open(template_path, "r") as f:
         html = f.read()
         
-    # Use regex to find and replace the reportData variable, in case it was already replaced.
     json_str = json.dumps(report_data)
-    
-    # This matches 'const reportData = null; // __INJECT_JSON_HERE__' or 'const reportData = {...};'
-    pattern = r'const reportData = .*?;(?: // __INJECT_JSON_HERE__)?'
-    replacement = f'const reportData = {json_str};'
-    
-    injected_html = re.sub(pattern, lambda m: replacement, html, count=1)
+
+    replacement = f"const reportData = {json_str}; // __INJECT_JSON_HERE__"
+
+    # Preferred path: replace any existing marker-based assignment.
+    marker_pattern = r'^\s*const reportData = .*?// __INJECT_JSON_HERE__\s*$'
+    if "__INJECT_JSON_HERE__" in html:
+        injected_html, count = re.subn(marker_pattern, replacement, html, count=1, flags=re.MULTILINE)
+        if count == 0:
+            print(f"[!] Dashboard marker found but reportData line could not be replaced in {template_path}")
+            return False
+    else:
+        # Backward-compatible fallback for older templates that don't have the marker comment.
+        legacy_pattern = r'^\s*const reportData = .*?;\s*$'
+        injected_html, count = re.subn(legacy_pattern, replacement, html, count=1, flags=re.MULTILINE)
+        if count == 0:
+            print(
+                f"[!] Could not inject dashboard data into {template_path}. "
+                "Expected a line starting with 'const reportData ='."
+            )
+            return False
     
     with open(template_path, "w") as f:
         f.write(injected_html)
+    return True
 
 def generate_terminal_report(report_data: dict):
     """Uses Rich to print a beautiful terminal report."""
@@ -51,6 +64,7 @@ def generate_terminal_report(report_data: dict):
     
     scores = report_data["scores"]
     cost = report_data["cost"]
+    timing = report_data["timing"]
     
     def get_color_and_icon(score):
         if score >= 80: return "green", "✓"
@@ -75,6 +89,15 @@ def generate_terminal_report(report_data: dict):
     # COST TRACKING
     cost_text = f"Total Cost: ${cost['total_cost']:.6f}\nAvg per query: ${cost['mean_cost_per_query']:.6f}"
     console.print(Panel(cost_text, title="[bold]COST TRACKING[/bold]", expand=False))
+
+    # TIMING
+    timing_text = (
+        f"Mean: {timing['mean_s']:.2f}s\n"
+        f"Median: {timing['median_s']:.2f}s\n"
+        f"Fastest: {timing['fastest_s']:.2f}s\n"
+        f"Slowest: {timing['slowest_s']:.2f}s"
+    )
+    console.print(Panel(timing_text, title="[bold]TIMING[/bold]", expand=False))
     
     # FAILURES
     if failed > 0:

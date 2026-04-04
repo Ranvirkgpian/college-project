@@ -54,13 +54,16 @@ def main():
     
     # 6. Inject into HTML dashboard
     dashboard_path = os.path.join("dashboard", "index.html")
-    inject_dashboard(report_data, dashboard_path)
+    injected = inject_dashboard(report_data, dashboard_path)
     
     # 7. Print terminal report
     generate_terminal_report(report_data)
     
     print(f"\n[+] Run complete! JSON saved to: {report_path}")
-    print(f"[+] Open dashboard: {dashboard_path}")
+    if injected:
+        print(f"[+] Open dashboard: {dashboard_path}")
+    else:
+        print(f"[!] Dashboard was not updated automatically. Please check: {dashboard_path}")
 
 if __name__ == "__main__":
     main()
