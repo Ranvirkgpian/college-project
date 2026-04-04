@@ -35,14 +35,14 @@ def inject_dashboard(report_data: dict, template_path: str = "dashboard/index.ht
     # Preferred path: replace any existing marker-based assignment.
     marker_pattern = r'^\s*const reportData = .*?// __INJECT_JSON_HERE__\s*$'
     if "__INJECT_JSON_HERE__" in html:
-        injected_html, count = re.subn(marker_pattern, replacement, html, count=1, flags=re.MULTILINE)
+        injected_html, count = re.subn(marker_pattern, lambda m: replacement, html, count=1, flags=re.MULTILINE)
         if count == 0:
             print(f"[!] Dashboard marker found but reportData line could not be replaced in {template_path}")
             return False
     else:
         # Backward-compatible fallback for older templates that don't have the marker comment.
         legacy_pattern = r'^\s*const reportData = .*?;\s*$'
-        injected_html, count = re.subn(legacy_pattern, replacement, html, count=1, flags=re.MULTILINE)
+        injected_html, count = re.subn(legacy_pattern, lambda m: replacement, html, count=1, flags=re.MULTILINE)
         if count == 0:
             print(
                 f"[!] Could not inject dashboard data into {template_path}. "
