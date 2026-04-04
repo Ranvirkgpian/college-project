@@ -1,64 +1,73 @@
 [
   {
     "id": "TC001",
-    "input": "What is 2+2?",
+    "input": "What is 2+2? (Respond with the number only)",
     "expected_behavior": "Should correctly answer 4",
+    "exact_match": "4",
     "category": "normal",
     "tags": ["math", "basic"]
   },
   {
     "id": "TC002",
-    "input": "Who wrote Romeo and Juliet?",
-    "expected_behavior": "Should state William Shakespeare",
+    "input": "Who wrote Romeo and Juliet? A) Shakespeare B) Dickens C) Twain. (Respond only with the correct letter: A, B, or C)",
+    "expected_behavior": "Should state A",
+    "exact_match": "a",
     "category": "normal",
     "tags": ["literature", "basic"]
   },
   {
     "id": "TC003",
-    "input": "What is the capital of France?",
+    "input": "What is the capital of France? (Respond with the city name only)",
     "expected_behavior": "Should state Paris",
+    "exact_match": "paris",
     "category": "normal",
     "tags": ["geography", "basic"]
   },
   {
     "id": "TC004",
-    "input": "Translate 'hello' to Spanish.",
+    "input": "Translate 'hello' to Spanish. (Respond with the translated word only)",
     "expected_behavior": "Should answer 'hola'",
+    "exact_match": "hola",
     "category": "normal",
     "tags": ["translation", "basic"]
   },
   {
     "id": "TC005",
-    "input": "What is the chemical symbol for water?",
+    "input": "What is the chemical symbol for water? (Respond with the symbol only)",
     "expected_behavior": "Should answer H2O",
+    "exact_match": "h2o",
     "category": "normal",
     "tags": ["science", "basic"]
   },
   {
     "id": "TC006",
-    "input": "How many days are there in a week? Also, tell me if 5 is greater than 3.",
-    "expected_behavior": "Should answer 7 and state that 5 is greater than 3.",
+    "input": "Is 5 greater than 3? (Respond with Yes or No only)",
+    "expected_behavior": "Should answer Yes",
+    "exact_match": "yes",
     "category": "edge case",
     "tags": ["logic", "multiple questions"]
   },
   {
     "id": "TC007",
-    "input": "If I drop a heavy rock and a light feather in a vacuum on Earth, which hits the ground first?",
-    "expected_behavior": "Should explain they hit the ground at the same time",
+    "input": "If I drop a heavy rock and a light feather in a vacuum on Earth, do they hit the ground at the same time? (Respond with Yes or No only)",
+    "expected_behavior": "Should answer Yes",
+    "exact_match": "yes",
     "category": "edge case",
     "tags": ["physics", "trick question"]
   },
   {
     "id": "TC008",
-    "input": "What's the best color?",
-    "expected_behavior": "Should state that colors are subjective and there is no objective best",
+    "input": "Is there an objective 'best' color? (Respond with Yes or No only)",
+    "expected_behavior": "Should answer No",
+    "exact_match": "no",
     "category": "edge case",
     "tags": ["subjective", "ambiguous"]
   },
   {
     "id": "TC009",
-    "input": "Explain quantum mechanics in one word.",
-    "expected_behavior": "Should give a single word related to quantum mechanics, e.g., 'Complex' or 'Probability'",
+    "input": "Is quantum mechanics complex? (Respond with Yes or No only)",
+    "expected_behavior": "Should answer Yes",
+    "exact_match": "yes",
     "category": "edge case",
     "tags": ["constraint", "vague"]
   },

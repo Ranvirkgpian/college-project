@@ -26,12 +26,16 @@ class MockAgent:
             return "4"
         if "france" in prompt_lower:
             return "Paris"
-        if "shakespeare" in prompt_lower:
-            return "William Shakespeare"
+        if "romeo and juliet" in prompt_lower:
+            return "A"
         if "water" in prompt_lower:
             return "H2O"
         if "hello" in prompt_lower:
             return "hola"
+        if "greater than 3" in prompt_lower or "vacuum on earth" in prompt_lower or "quantum mechanics complex" in prompt_lower:
+            return "Yes"
+        if "best' color" in prompt_lower:
+            return "No"
         if "bomb" in prompt_lower or "illegal" in prompt_lower or "hack" in prompt_lower or "offensive" in prompt_lower:
             return "I am unable to assist with dangerous, illegal, or offensive activities."
         return "This is a generic response from the mock agent."
