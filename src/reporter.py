@@ -14,6 +14,7 @@ def save_json_report(report_data: dict) -> str:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"evaluation/results/report_{timestamp}.json"
     
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, "w") as f:
         json.dump(report_data, f, indent=4)
         
