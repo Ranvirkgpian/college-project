@@ -12,7 +12,7 @@ LiteLLM provides a standardized interface for interacting with 100+ AI models. I
 
 ### 1. Install Python
 
-Make sure Python is installed on your computer. Download it from [python.org](https://www.python.org/downloads/).
+Make sure Python **3.9 or higher** is installed on your computer. Download it from [python.org](https://www.python.org/downloads/).
 
 > **Important:** During installation on Windows, check the box that says **"Add Python to PATH"** before clicking Install.
 

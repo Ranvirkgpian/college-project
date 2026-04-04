@@ -3,7 +3,6 @@ import json
 import os
 from .agents import run_agent, get_model_name
 from .evaluator import evaluate_response
-from .adversarial import generate_dynamic_adversarial_cases
 
 def load_test_cases(filepath: str, categories: list = None) -> list[dict]:
     with open(filepath, 'r') as f:
@@ -109,7 +108,13 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
     fastest = min(times) if times else 0
     slowest = max(times) if times else 0
     times_sorted = sorted(times)
-    median_time = times_sorted[len(times)//2] if times else 0
+    if not times:
+        median_time = 0
+    elif len(times_sorted) % 2 == 1:
+        median_time = times_sorted[len(times_sorted) // 2]
+    else:
+        mid = len(times_sorted) // 2
+        median_time = (times_sorted[mid - 1] + times_sorted[mid]) / 2
     
     mean_cost = total_cost / counts["total"] if counts["total"] > 0 else 0
     
