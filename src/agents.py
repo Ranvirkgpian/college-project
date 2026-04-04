@@ -6,14 +6,14 @@ from litellm.exceptions import AuthenticationError
 
 AGENT_MAPPING = {
     "gpt": "gpt-4o-mini",
-    "gemini": "gemini/gemini-3.1-flash-lite",
-    "claude": "claude-3-haiku-20240307",
+    "gemini": "gemini/gemini-2.0-flash-lite",
+    "claude": "claude-3-5-haiku-20241022",
     "mistral": "mistral/mistral-small",
     "groq": "groq/meta-llama/llama-4-scout-17b-16e-instruct",
     "mock": "mock"
 }
 
-FALLBACK_CHAIN = ["gemini/gemini-1.5-flash", "claude-3-haiku-20240307", "groq/llama3-8b-8192"]
+FALLBACK_CHAIN = ["gemini/gemini-1.5-flash", "claude-3-5-haiku-20241022", "groq/meta-llama/llama-4-scout-17b-16e-instruct"]
 
 class MockAgent:
     """A built-in mock agent for testing without API keys."""
