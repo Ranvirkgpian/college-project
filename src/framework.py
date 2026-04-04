@@ -72,6 +72,7 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
         result_record = {
             "id": case["id"],
             "input": case["input"],
+            "expected_behavior": case.get("expected_behavior", "No expected behavior specified"),
             "category": cat,
             "response": response_text,
             "duration": duration,
