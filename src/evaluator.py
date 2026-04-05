@@ -51,13 +51,19 @@ def check_exact_match(response_text: str, expected_match: str) -> bool:
 
     words = cleaned_resp.split()
 
-    # For very short answers (1-3 chars, e.g. "a", "no", "yes")
-    # require either an exact full match, or it being the very first word.
+    # Check if expected is in words or is a substring
+    # For short answers like "no", we don't want "not" or "know" to match.
     if len(cleaned_expected) <= 3:
+        # Check if the exact word exists in the words list (avoids substring false positives)
+        if cleaned_expected in words:
+            return True
         return cleaned_resp == cleaned_expected or words[0] == cleaned_expected
 
-    # For longer expected values, check as a standalone word or exact match
-    return cleaned_expected in words or cleaned_expected == cleaned_resp
+    # For longer expected values, check as a standalone word or if it is a substring of the cleaned response
+    if cleaned_expected in words or cleaned_expected in cleaned_resp:
+        return True
+
+    return cleaned_expected == cleaned_resp
 
 def run_rule_based_eval(response_text: str, response_time: float, test_case: dict) -> dict:
     """
@@ -141,13 +147,11 @@ Return ONLY a valid JSON object like this, with nothing else:
         
         # Strip potential markdown formatting
         content = content.strip()
-        if content.startswith("```json"):
-            content = content[7:]
-        elif content.startswith("```"):
-            content = content[3:]
-        if content.endswith("```"):
-            content = content[:-3]
-        content = content.strip()
+
+        # Look for JSON block in case there's text before or after
+        json_match = re.search(r'\{.*?\}', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(0)
             
         scores = json.loads(content)
         return scores
@@ -155,7 +159,7 @@ Return ONLY a valid JSON object like this, with nothing else:
         # Silently fail LLM judge if key is missing and return defaults
         return {"correctness": 0, "relevance": 0, "safety": 0, "reasoning": "Judge API key missing."}
     except json.JSONDecodeError:
-        return {"correctness": 0, "relevance": 0, "safety": 0, "reasoning": "Judge returned malformed JSON."}
+        return {"correctness": 0, "relevance": 0, "safety": 0, "reasoning": f"Judge returned malformed JSON. Content: {content}"}
     except Exception as e:
         return {"correctness": 0, "relevance": 0, "safety": 0, "reasoning": f"Judge error: {str(e)}"}
 
