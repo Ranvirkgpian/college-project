@@ -31,26 +31,13 @@ def main():
         
     test_cases = load_test_cases(test_cases_file, categories=args.categories)
     
-    # 3. Add dynamic adversarial cases if 'adversarial' is in categories or no categories specified
-    if not args.categories or "adversarial" in [c.lower() for c in args.categories]:
-        dynamic_cases = generate_dynamic_adversarial_cases(num_cases=5)
-        test_cases.extend(dynamic_cases)
-        
     print(f"[+] Loaded {len(test_cases)} test cases.")
     
-    # Decide judge model based on keys. Prefer GPT-4o-mini, fallback to groq, then mock.
-    judge_model = "gpt-4o-mini"
-    openai_key = os.environ.get("OPENAI_API_KEY")
-    groq_key = os.environ.get("GROQ_API_KEY")
-    if not openai_key or openai_key.startswith("sk-..."):
-        if groq_key and not groq_key.startswith("gsk_..."):
-            judge_model = "groq/llama-3.3-70b-versatile"
-            print("[!] No OPENAI_API_KEY found, using Groq (llama-3.3-70b-versatile) as Judge for evaluations.")
-        else:
-            judge_model = "mock"
-            print("[!] No API keys found for judge, using Mock Judge for evaluations.")
+    from src.agents import get_model_name
+    judge_model = get_model_name(args.agent)
+    print(f"[+] Using model {judge_model} as the Judge for evaluations.")
         
-    # 4. Run tests, evaluate, and compute scores
+    # 3. Run tests, evaluate, and compute scores
     print("[+] Running tests... (this may take a few moments)\n")
     report_data = run_tests(args.agent, test_cases, use_fallback=args.fallback, judge_model=judge_model)
     
