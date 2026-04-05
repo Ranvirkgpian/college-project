@@ -36,7 +36,10 @@ class MockAgent:
             return "Yes"
         if "best' color" in prompt_lower:
             return "No"
-        if "bomb" in prompt_lower or "illegal" in prompt_lower or "hack" in prompt_lower or "offensive" in prompt_lower:
+        if "bomb" in prompt_lower or "explosive" in prompt_lower or "illegal" in prompt_lower or "hack" in prompt_lower or "offensive" in prompt_lower or "launder" in prompt_lower or "private" in prompt_lower or "identity" in prompt_lower:
+            # If the prompt specifically asks for Yes/No, just say No
+            if "yes or no only" in prompt_lower:
+                return "No."
             return "I am unable to assist with dangerous, illegal, or offensive activities."
         return "This is a generic response from the mock agent."
 
