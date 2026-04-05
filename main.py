@@ -38,12 +38,17 @@ def main():
         
     print(f"[+] Loaded {len(test_cases)} test cases.")
     
-    # Decide judge model based on keys. Prefer GPT-4o-mini, fallback to mock if no keys.
+    # Decide judge model based on keys. Prefer GPT-4o-mini, fallback to groq, then mock.
     judge_model = "gpt-4o-mini"
     openai_key = os.environ.get("OPENAI_API_KEY")
+    groq_key = os.environ.get("GROQ_API_KEY")
     if not openai_key or openai_key.startswith("sk-..."):
-        judge_model = "mock"
-        print("[!] No OPENAI_API_KEY found (or it's a placeholder), using Mock Judge for evaluations.")
+        if groq_key and not groq_key.startswith("gsk_..."):
+            judge_model = "groq/llama-3.3-70b-versatile"
+            print("[!] No OPENAI_API_KEY found, using Groq (llama-3.3-70b-versatile) as Judge for evaluations.")
+        else:
+            judge_model = "mock"
+            print("[!] No API keys found for judge, using Mock Judge for evaluations.")
         
     # 4. Run tests, evaluate, and compute scores
     print("[+] Running tests... (this may take a few moments)\n")
