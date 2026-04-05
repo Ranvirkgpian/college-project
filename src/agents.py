@@ -10,6 +10,7 @@ AGENT_MAPPING = {
     "claude": "claude-3-5-haiku-20241022",
     "mistral": "mistral/mistral-small",
     "groq": "groq/meta-llama/llama-4-scout-17b-16e-instruct",
+    "qwen": "qwen/qwen3.6-plus:free",
     "mock": "mock"
 }
 

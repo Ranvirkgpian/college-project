@@ -211,6 +211,7 @@ http://localhost:8000/dashboard/index.html
 | `--agent gemini` | Google Gemini |
 | `--agent mistral` | Mistral AI |
 | `--agent groq` | Groq (free tier available) |
+| `--agent qwen` | Qwen (qwen3.6-plus:free) |
 | `--agent "mistral/mistral-large-latest"` | Any custom LiteLLM model string |
 
 ---
