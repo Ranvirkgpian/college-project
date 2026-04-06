@@ -64,6 +64,11 @@ def run_tests(agent_alias: str, test_cases: list[dict], use_fallback: bool = Fal
         
         passed = eval_result["passed"]
         
+        # Add a delay to avoid hitting rate limits on free/dev tiers
+        # Groq allows 30 RPM, and each test case makes 2 requests (agent + judge).
+        # We need to average ~1 request every 2 seconds. Sleeping for 4s ensures we stay under.
+        time.sleep(4)
+
         counts["total"] += 1
         category_counts[cat]["total"] += 1
         
